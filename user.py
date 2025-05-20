@@ -8,24 +8,24 @@ class User:
         self.last_name = last_name
         self.avatar = avatar
 
-@classmethod
+    @classmethod
+    def from_api (cls, user_id):
+        response = requests.get (f"https://reqres.in/api/users/{user_id}")
+        if response.status_code == 200:
+            data = response.json().get("data")
+            return cls(
+                id=data["id"],
+                email=data["email"],
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                avatar=data["avatar"]
+            )
+        else:
+            print(f"ID {user_id} is not found")
+            return None
 
-def from_api (cls, user_id):
-    response = requests.get (f"https://reqres.in/api/users/{user_id}")
-    if response.status_code == 200:
-        data = response.json().get("data")
-        return cls(
-            id=data["id"],
-            email=data["email"],
-            first_name=data["first_name"],
-            last_name=data["last_name"],
-            avatar=data["avatar"]
-        )
-    else:
-        print(f"ID {user_id} is not found")
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}"
 
-def full_name(self):
-    return f"{self.first_name} {self.last_name} "
-
-def is_valid_email(self):
-    return "@" in self.email
+    def is_valid_email(self) -> bool:
+        return "@" in self.email and "." in self.email
