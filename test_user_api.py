@@ -1,9 +1,10 @@
 import requests
 from user import User
 
+HEADERS = {"x-api-key": "reqres-free-v1"}
 
 def test_get_user_id ():
-    response = requests.get (f"https://reqres.in/api/users/2")
+    response = requests.get ("https://reqres.in/api/users/2", headers=HEADERS)
     assert response.status_code == 200
 
     data = response.json().get("data")
