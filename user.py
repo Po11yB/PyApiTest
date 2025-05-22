@@ -10,9 +10,12 @@ class User:
 
     @classmethod
     def from_api (cls, user_id):
-        response = requests.get (f"https://reqres.in/api/users/{user_id}")
-        if response.status_code == 200:
+        try:
+            response = requests.get (f"https://reqres.in/api/users/{user_id}")
+            response.raise_for_status()
             data = response.json().get("data")
+            if not data:
+                raise ValueError ("No data response")
             return cls(
                 id=data["id"],
                 email=data["email"],
@@ -20,9 +23,13 @@ class User:
                 last_name=data["last_name"],
                 avatar=data["avatar"]
             )
-        else:
-            print(f"ID {user_id} is not found")
-            return None
+        except ValueError as e:
+            print(f"Invalid response {e}")
+        except KeyError as k:
+            print(f"Invalid key data {k}")
+        return None
+
+
 
     def full_name(self) -> str:
         return f"{self.first_name} {self.last_name}"

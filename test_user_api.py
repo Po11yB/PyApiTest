@@ -27,3 +27,13 @@ def test_user_object():
     assert u.id == 1
     assert u.first_name == "Polly"
     assert u.last_name == "Test"
+
+try:
+    user_id = int(input("Put user ID:"))
+    user = User.from_api(user_id)
+    if user:
+        print (user.full_name())
+    else:
+        print("User no found")
+except ValueError:
+    print("Invalid user ID")
